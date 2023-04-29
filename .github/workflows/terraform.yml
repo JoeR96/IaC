@@ -1,6 +1,7 @@
 name: 'Terraform'
 
 on:
+  # Triggers the workflow on push or pull request events but only for the "vite" branch
   push:
     branches: [ "main" ]
   pull_request:
@@ -21,16 +22,6 @@ jobs:
 
     - name: Terraform Init
       run: terraform init
-
-    - name: Terraform Import
-      if: github.ref == 'refs/heads/main'
-      run: |
-        terraform import aws_lb.main arn:aws:elasticloadbalancing:eu-west-2:108546418244:loadbalancer/app/main-lb/9a14e3ec5b5603bb
-        terraform import aws_lb_target_group.main arn:aws:elasticloadbalancing:eu-west-2:108546418244:targetgroup/main-tg/b03e8c512452b95d
-        terraform import aws_db_subnet_group.main main-db-subnet-group
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Terraform Validate
       run: terraform validate
