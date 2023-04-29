@@ -28,27 +28,16 @@ resource "aws_ecs_task_definition" "main" {
   network_mode             = "awsvpc"
   cpu                      = "256"
   memory                   = "512"
-  execution_role_arn       = "your_execution_role_arn"
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
 
   container_definitions = jsonencode([
     {
       name  = "cognito-auth-api"
-      image = "${aws_ecr_repository.cognito_auth_api.repository_url}:latest"
+      image = var.cognito_auth_api_image
       portMappings = [
         {
           containerPort = 80
           hostPort      = 80
-        }
-      ]
-      essential = true
-    },
-    {
-      name  = "container-2"
-      image = "your_image_repository_for_container_2"
-      portMappings = [
-        {
-          containerPort = 81
-          hostPort      = 81
         }
       ]
       essential = true
@@ -57,3 +46,25 @@ resource "aws_ecs_task_definition" "main" {
   ])
 }
 
+
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "my-ecs-task-execution-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  role       = aws_iam_role.ecs_task_execution_role.name
+}

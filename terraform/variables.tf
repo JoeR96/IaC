@@ -8,3 +8,8 @@ variable "rds_password" {
   default     = ""
   sensitive   = true
 }
+
+variable "cognito_auth_api_image" {
+  description = "The URL of the ECR repository containing the cognito-auth-api image"
+  type        = string
+}
