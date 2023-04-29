@@ -15,8 +15,8 @@ resource "aws_security_group_rule" "rds_ingress" {
 }
 
 locals {
-  rds_username = var.rds_username != "" ? var.rds_username : "${{ secrets.RDS_USERNAME }}"
-  rds_password = var.rds_password != "" ? var.rds_password : "${{ secrets.RDS_PASSWORD }}"
+  rds_username = "${{ secrets.RDS_USERNAME }}"
+  rds_password = "${{ secrets.RDS_PASSWORD }}"
 }
 
 
