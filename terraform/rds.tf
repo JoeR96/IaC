@@ -15,8 +15,8 @@ resource "aws_security_group_rule" "rds_ingress" {
 }
 
 locals {
-  rds_username = var.RDS_USERNAME
-  rds_password = var.RDS_PASSWORD
+  rds_username = var.rds_username
+  rds_password = var.rds_password
 }
 
 resource "aws_db_instance" "main" {
