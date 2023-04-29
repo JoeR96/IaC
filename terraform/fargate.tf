@@ -28,7 +28,7 @@ resource "aws_ecs_task_definition" "main" {
   network_mode             = "awsvpc"
   cpu                      = "256"
   memory                   = "512"
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role[0].arn
 
   container_definitions = jsonencode([
     {
@@ -46,6 +46,10 @@ resource "aws_ecs_task_definition" "main" {
   ])
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  role       = aws_iam_role.ecs_task_execution_role[0].name
+}
 
 data "aws_iam_role" "existing_ecs_task_execution_role" {
   name = "my-ecs-task-execution-role"
