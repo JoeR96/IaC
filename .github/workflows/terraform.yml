@@ -1,6 +1,7 @@
 name: 'Terraform'
 
 on:
+  # Triggers the workflow on push or pull request events but only for the "vite" branch
   push:
     branches: [ "main" ]
   pull_request:
@@ -32,31 +33,6 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
         RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
-
-    - name: Import Existing Resources
-      if: github.ref == 'refs/heads/main'
-      run: |
-        # Load the AWS CLI
-        pip install awscli
-
-        # Check if resources already exist
-        aws elbv2 describe-load-balancers --names main-lb || IMPORT_LB=true
-        aws elbv2 describe-target-groups --names main-tg || IMPORT_TG=true
-        aws rds describe-db-subnet-groups --db-subnet-group-name main-db-subnet-group || IMPORT_DB_SG=true
-
-        # Import existing resources if necessary
-        if [ "$IMPORT_LB" = true ]; then
-          terraform import aws_lb.main arn:aws:elasticloadbalancing:eu-west-2:108546418244:loadbalancer/app/main-lb/9a14e3ec5b5603bb
-        fi
-        if [ "$IMPORT_TG" = true ]; then
-          terraform import aws_lb_target_group.main arn:aws:elasticloadbalancing:eu-west-2:108546418244:targetgroup/main-tg/b03e8c512452b95d
-        fi
-        if [ "$IMPORT_DB_SG" = true ]; then
-          terraform import aws_db_subnet_group.main main-db-subnet-group
-        fi
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
