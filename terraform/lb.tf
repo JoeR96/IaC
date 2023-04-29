@@ -22,6 +22,7 @@ resource "aws_lb_target_group" "main" {
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.main.id
+  target_type = "ip" # Add this line
 
   health_check {
     enabled             = true
