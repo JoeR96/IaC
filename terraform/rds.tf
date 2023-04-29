@@ -32,7 +32,7 @@ resource "aws_db_instance" "main" {
   publicly_accessible   = true
   availability_zone     = "eu-west-2a"
   skip_final_snapshot   = true
-
+  db_subnet_group_name = aws_db_subnet_group.main.name
   lifecycle {
     ignore_changes = [
       # Add any attributes here that you want to ignore when updating the infrastructure
@@ -40,5 +40,14 @@ resource "aws_db_instance" "main" {
       engine_version,
       instance_class,
     ]
+  }
+}
+
+resource "aws_db_subnet_group" "main" {
+  name       = "main-db-subnet-group"
+  subnet_ids = [aws_subnet.main.id]
+
+  tags = {
+    Name = "main-db-subnet-group"
   }
 }
