@@ -18,10 +18,6 @@ resource "aws_security_group_rule" "fargate_ingress" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
-resource "aws_ecr_repository" "cognito_auth_api" {
-  name = "cognito-auth-api"
-}
-
 resource "aws_ecs_cluster" "main" {
   name = "main-ecs-cluster"
 }
@@ -51,7 +47,12 @@ resource "aws_ecs_task_definition" "main" {
 }
 
 
+data "aws_iam_role" "existing_ecs_task_execution_role" {
+  name = "my-ecs-task-execution-role"
+}
+
 resource "aws_iam_role" "ecs_task_execution_role" {
+  count = data.aws_iam_role.existing_ecs_task_execution_role.id == "" ? 1 : 0
   name = "my-ecs-task-execution-role"
 
   assume_role_policy = jsonencode({
@@ -67,7 +68,6 @@ resource "aws_iam_role" "ecs_task_execution_role" {
     ]
   })
 }
-
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
   role       = aws_iam_role.ecs_task_execution_role.name

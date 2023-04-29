@@ -26,8 +26,8 @@ resource "aws_db_instance" "main" {
   engine_version        = "8.0.26"
   identifier            = "main-db-instance"
   name                  = "OperationStacked"
-  username              = local.rds_username
-  password              = local.rds_password
+  username              = "devops69420"
+  password              = "devops69420"
   vpc_security_group_ids = [aws_security_group.rds.id]
   publicly_accessible   = true
   availability_zone     = "eu-west-2a"
