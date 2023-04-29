@@ -1,3 +1,7 @@
+data "aws_ssm_parameter" "ecr_repository_url" {
+  name = "/app/cognito-auth-api/url"
+}
+
 resource "aws_security_group" "fargate" {
   name        = "fargate_security_group"
   description = "Fargate security group"
@@ -33,7 +37,7 @@ resource "aws_ecs_task_definition" "main" {
   container_definitions = jsonencode([
     {
       name  = "cognito-auth-api"
-      image = var.cognito_auth_api_image
+      image = data.aws_ssm_parameter.ecr_repository_url.value
       portMappings = [
         {
           containerPort = 80
