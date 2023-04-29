@@ -21,20 +21,20 @@ locals {
 
 
 resource "aws_db_instance" "main" {
-  allocated_storage    = 20
-  instance_class       = "db.t2.micro"
-  engine               = "postgres"
-  engine_version       = "12.3"
-  identifier           = "main-db-instance"
-  name                 = "OperationStacked"
-  username             = local.rds_username
-  password             = local.rds_password
+  allocated_storage     = 20
+  instance_class        = "db.t2.micro"
+  engine                = "mysql"
+  engine_version        = "8.0.26"
+  identifier            = "main-db-instance"
+  name                  = "OperationStacked"
+  username              = local.rds_username
+  password              = local.rds_password
   vpc_security_group_ids = [aws_security_group.rds.id]
-  publicly_accessible = true
-  availability_zone = "eu-west-2a"
-  skip_final_snapshot = true
+  publicly_accessible   = true
+  availability_zone     = "eu-west-2a"
+  skip_final_snapshot   = true
 
-   lifecycle {
+  lifecycle {
     ignore_changes = [
       # Add any attributes here that you want to ignore when updating the infrastructure
       allocated_storage,
