@@ -15,10 +15,9 @@ resource "aws_security_group_rule" "rds_ingress" {
 }
 
 locals {
-  rds_username = "${{ secrets.RDS_USERNAME }}"
-  rds_password = "${{ secrets.RDS_PASSWORD }}"
+  rds_username = var.RDS_USERNAME
+  rds_password = var.RDS_PASSWORD
 }
-
 
 resource "aws_db_instance" "main" {
   allocated_storage     = 20
