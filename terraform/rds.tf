@@ -45,7 +45,7 @@ resource "aws_db_instance" "main" {
 
 resource "aws_db_subnet_group" "main" {
   name       = "main-db-subnet-group"
-  subnet_ids = [aws_subnet.main.id]
+  subnet_ids = [aws_subnet.main.id, aws_subnet.secondary.id]
 
   tags = {
     Name = "main-db-subnet-group"
