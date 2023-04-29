@@ -14,6 +14,11 @@ resource "aws_security_group_rule" "rds_ingress" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
+locals {
+  rds_username = var.rds_username != "" ? var.rds_username : getenv("RDS_USERNAME")
+  rds_password = var.rds_password != "" ? var.rds_password : getenv("RDS_PASSWORD")
+}
+
 resource "aws_db_instance" "main" {
   allocated_storage    = 20
   instance_class       = "db.t2.micro"
@@ -21,8 +26,8 @@ resource "aws_db_instance" "main" {
   engine_version       = "12.3"
   identifier           = "main-db-instance"
   name                 = "OperationStacked"
-  username             = var.rds_username
-  password             = var.rds_password
+  username             = local.rds_username
+  password             = local.rds_password
   vpc_security_group_ids = [aws_security_group.rds.id]
   publicly_accessible = true
   availability_zone = "eu-west-2a"
