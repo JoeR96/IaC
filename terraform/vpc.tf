@@ -17,3 +17,13 @@ resource "aws_subnet" "main" {
     Name = "main-subnet"
   }
 }
+
+resource "aws_subnet" "secondary" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "eu-west-2b"
+
+  tags = {
+    Name = "secondary-subnet"
+  }
+}
