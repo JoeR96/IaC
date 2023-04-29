@@ -54,3 +54,27 @@ resource "aws_ecs_task_definition" "main" {
     # Add more container definitions here as needed, up to 10 containers
   ])
 }
+
+resource "aws_ecs_service" "main" {
+  name            = "main-ecs-service"
+  cluster         = aws_ecs_cluster.main.id
+  task_definition = aws_ecs_task_definition.main.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = [aws_subnet.main.id, aws_subnet.secondary.id]
+    security_groups  = [aws_security_group.fargate.id]
+    assign_public_ip = true
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.main.arn
+    container_name   = "cognito-auth-api"
+    container_port   = 80
+  }
+
+  depends_on = [
+    aws_lb_listener.main
+  ]
+}
