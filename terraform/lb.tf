@@ -4,6 +4,10 @@ resource "aws_lb" "main" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.fargate.id]
   subnets            = [aws_subnet.main.id, aws_subnet.secondary.id]
+
+   lifecycle {
+    ignore_changes = [name] # Add other attributes to ignore if needed
+  }
 }
 
 resource "aws_lb_listener" "main" {
@@ -31,5 +35,8 @@ resource "aws_lb_target_group" "main" {
     timeout             = 5
     healthy_threshold   = 3
     unhealthy_threshold = 3
+  }
+   lifecycle {
+    ignore_changes = [name] # Add other attributes to ignore if needed
   }
 }

@@ -50,4 +50,8 @@ resource "aws_db_subnet_group" "main" {
   tags = {
     Name = "main-db-subnet-group"
   }
+
+   lifecycle {
+    ignore_changes = [name] # Add other attributes to ignore if needed
+  }
 }
