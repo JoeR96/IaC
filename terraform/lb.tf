@@ -2,11 +2,18 @@ data "aws_lb" "main" {
   name = "main-lb"
 }
 
-data "aws_lb_target_group" "main" {
-  name = "main-tg"
+# Create a new target group with a different name
+resource "aws_lb_target_group" "new_main" {
+  name     = "new-main-tg"
+  port     = 80
+  protocol = "HTTP"
+  target_type = "ip"
+  vpc_id   = aws_vpc.main.id
 }
 
-# Remove the "aws_lb" and "aws_lb_target_group" resource blocks from lb.tf
+data "aws_lb_target_group" "main" {
+  name = aws_lb_target_group.new_main.name
+}
 
 resource "aws_lb_listener" "main" {
   load_balancer_arn = data.aws_lb.main.arn

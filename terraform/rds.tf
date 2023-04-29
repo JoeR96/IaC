@@ -34,8 +34,8 @@ resource "aws_db_instance" "main" {
   skip_final_snapshot   = true
   db_subnet_group_name = data.aws_db_subnet_group.main.name
   lifecycle {
+    create_before_destroy = true
     ignore_changes = [
-      # Add any attributes here that you want to ignore when updating the infrastructure
       allocated_storage,
       engine_version,
       instance_class,
