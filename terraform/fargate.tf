@@ -56,3 +56,4 @@ resource "aws_ecs_task_definition" "main" {
     # Add more container definitions here as needed, up to 10 containers
   ])
 }
+
